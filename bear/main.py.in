@@ -368,10 +368,17 @@ def include(includes, excludes):
     include_dirs = [make_absolute(directory) for directory in includes]
     exclude_dirs = [make_absolute(directory) for directory in excludes]
 
+#<<<<<<< HEAD
     def include_filter(candidate):
         # type: (Compilation) -> bool
         """ The predicate which returns true if the compilation should
         be included in the final output. """
+#=======
+#        # return exit_code, iter(set(current))
+#        tmp = list(current)
+#        tmp2 = iter(tmp)
+#        return exit_code, tmp2
+#>>>>>>> preserve order
 
         def contains(container, directory):
             # type: (str, str) -> bool
@@ -477,10 +484,18 @@ def exec_trace_files(directory):
     :param directory:   path to directory which contains the trace files.
     :return:            a generator of file names (absolute path). """
 
-    for root, _, files in os.walk(directory):
-        for candidate in files:
-            if candidate.startswith(TRACE_FILE_PREFIX):
-                yield os.path.join(root, candidate)
+    # for root, _, files in os.walk(directory):
+    #     for candidate in files:
+    #         if candidate.startswith(TRACE_FILE_PREFIX):
+    #             yield os.path.join(root, candidate)
+
+    # TODO: output even when keyboard interrupt
+    files = [fs for _, _, fs in os.walk(directory)][0]
+    files = sorted(files)
+    for candidate in files:
+        if candidate.startswith(TRACE_FILE_PREFIX):
+            yield os.path.join(directory, candidate)
+
 
 
 def parse_args_for_intercept_build():
@@ -870,7 +885,8 @@ def temporary_directory(**kwargs):
     try:
         yield name
     finally:
-        shutil.rmtree(name)
+        pass
+        # shutil.rmtree(name)
 
 
 if __name__ == "__main__":
