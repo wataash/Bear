@@ -319,7 +319,10 @@ def capture(args, category):
         safe_calls = (x for x in calls if x is not None)
         current = compilations(safe_calls, category)
 
-        return exit_code, iter(set(current))
+        # return exit_code, iter(set(current))
+        tmp = list(current)
+        tmp2 = iter(tmp)
+        return exit_code, tmp2
 
 
 def compilations(exec_calls, category):
@@ -410,10 +413,18 @@ def exec_trace_files(directory):
     :param directory:   path to directory which contains the trace files.
     :return:            a generator of file names (absolute path). """
 
-    for root, _, files in os.walk(directory):
-        for candidate in files:
-            if candidate.startswith(TRACE_FILE_PREFIX):
-                yield os.path.join(root, candidate)
+    # for root, _, files in os.walk(directory):
+    #     for candidate in files:
+    #         if candidate.startswith(TRACE_FILE_PREFIX):
+    #             yield os.path.join(root, candidate)
+
+    # TODO: output even when keyboard interrupt
+    files = [fs for _, _, fs in os.walk(directory)][0]
+    files = sorted(files)
+    for candidate in files:
+        if candidate.startswith(TRACE_FILE_PREFIX):
+            yield os.path.join(directory, candidate)
+
 
 
 def parse_args_for_intercept_build():
@@ -751,7 +762,8 @@ def temporary_directory(**kwargs):
     try:
         yield name
     finally:
-        shutil.rmtree(name)
+        pass
+        # shutil.rmtree(name)
 
 
 if __name__ == "__main__":

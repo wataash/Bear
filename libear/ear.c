@@ -59,6 +59,8 @@ static char **environ;
 extern char **environ;
 #endif
 
+#include <libwutils.h>
+
 #define ENV_OUTPUT "INTERCEPT_BUILD_TARGET_DIR"
 #ifdef APPLE
 # define ENV_FLAT    "DYLD_FORCE_FLAT_NAMESPACE"
@@ -451,9 +453,11 @@ static void report_call(char const *const argv[]) {
         return;
     // Create report file name
     char const * const out_dir = initial_env[0];
-    size_t const path_max_length = strlen(out_dir) + 32;
+    size_t const path_max_length = strlen(out_dir) + 64;
     char filename[path_max_length];
-    if (-1 == snprintf(filename, path_max_length, "%s/execution.XXXXXX", out_dir))
+    struct timespec ts = {};
+    (void)clock_gettime(CLOCK_MONOTONIC, &ts);
+    if (-1 == snprintf(filename, path_max_length, "%s/execution.%09jd.%09jd.XXXXXX", out_dir, (intmax_t)ts.tv_sec, (intmax_t)ts.tv_nsec))
         ERROR_AND_EXIT("snprintf");
     // Create report file
     int fd = mkstemp((char *)&filename);
