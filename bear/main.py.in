@@ -106,6 +106,7 @@ COMPILER_PATTERNS_CC = (
     re.compile(r'^([^-]*-)*clang(-\d+(\.\d+){0,2})?$'),
     re.compile(r'^(|i)cc$'),
     re.compile(r'^(g|)xlc$'),
+    re.compile(r'^xgcc$'),
 )
 
 # Known C++ compiler executable name patterns.
