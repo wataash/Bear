@@ -59,7 +59,7 @@ static char **environ;
 extern char **environ;
 #endif
 
-#include <libwutils.h>
+// #include <libwutils.h>
 
 #define ENV_OUTPUT "INTERCEPT_BUILD_TARGET_DIR"
 #ifdef APPLE
